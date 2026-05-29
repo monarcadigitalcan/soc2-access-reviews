@@ -1,0 +1,15 @@
+# Ruff configuration — https://docs.astral.sh/ruff/
+line-length = 120
+target-version = "py39"
+
+[lint]
+# A pragmatic, non-pedantic rule set:
+#   E/W  pycodestyle, F pyflakes, I import sorting, UP pyupgrade, B bugbear
+select = ["E", "W", "F", "I", "UP", "B"]
+ignore = [
+    "E501",  # line length is handled by the formatter, don't fail on it
+    "B008",  # function calls in argument defaults (common in CLIs)
+]
+
+[lint.per-file-ignores]
+"__init__.py" = ["F401"]  # re-exports

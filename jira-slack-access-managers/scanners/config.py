@@ -5,12 +5,13 @@ and provides GCS upload utilities.
 For local development, falls back to environment variables.
 """
 
-import os
 import logging
+import os
 from datetime import datetime, timezone
 from pathlib import Path
 
 logger = logging.getLogger(__name__)
+
 
 # --------------------------------------------------------------------------- #
 #  Auto-load .env file (so you don't need to export vars every session)
@@ -32,6 +33,7 @@ def _load_env_file():
                     # Don't override existing env vars
                     if key not in os.environ:
                         os.environ[key] = value
+
 
 _load_env_file()
 
@@ -68,10 +70,7 @@ def get_secret(secret_id: str, project_id: str = None) -> str:
 
     project = project_id or GCP_PROJECT_ID
     if not project:
-        raise RuntimeError(
-            f"Cannot fetch secret '{secret_id}': GCP_PROJECT_ID not set "
-            "and no env var fallback found."
-        )
+        raise RuntimeError(f"Cannot fetch secret '{secret_id}': GCP_PROJECT_ID not set and no env var fallback found.")
 
     try:
         from google.cloud import secretmanager
@@ -81,7 +80,7 @@ def get_secret(secret_id: str, project_id: str = None) -> str:
         response = client.access_secret_version(request={"name": name})
         return response.payload.data.decode("UTF-8")
     except Exception as e:
-        raise RuntimeError(f"Failed to fetch secret '{secret_id}': {e}")
+        raise RuntimeError(f"Failed to fetch secret '{secret_id}': {e}") from e
 
 
 # --------------------------------------------------------------------------- #
@@ -118,7 +117,7 @@ def upload_csv_to_gcs(
         logger.info(f"Uploaded {local_path} -> {gcs_uri}")
         return gcs_uri
     except Exception as e:
-        raise RuntimeError(f"Failed to upload to GCS: {e}")
+        raise RuntimeError(f"Failed to upload to GCS: {e}") from e
 
 
 # --------------------------------------------------------------------------- #

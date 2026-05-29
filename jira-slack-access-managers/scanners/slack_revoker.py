@@ -13,9 +13,10 @@ Required bot scopes: channels:manage, groups:write
 
 import logging
 import time
+
 import requests
 
-from .config import get_secret, SECRET_SLACK_TOKEN
+from .config import SECRET_SLACK_TOKEN, get_secret
 
 logger = logging.getLogger(__name__)
 
@@ -52,17 +53,19 @@ class SlackRevoker:
 
         return result
 
-    def kick_from_channel(self, channel_id: str, user_id: str,
-                          dry_run: bool = False) -> tuple[bool, str]:
+    def kick_from_channel(self, channel_id: str, user_id: str, dry_run: bool = False) -> tuple[bool, str]:
         """Remove a user from a channel."""
         if dry_run:
             logger.info(f"[DRY RUN] Would kick {user_id} from channel {channel_id}")
             return True, "dry_run"
 
-        result = self._api("conversations.kick", {
-            "channel": channel_id,
-            "user": user_id,
-        })
+        result = self._api(
+            "conversations.kick",
+            {
+                "channel": channel_id,
+                "user": user_id,
+            },
+        )
 
         if result.get("ok"):
             logger.info(f"Kicked {user_id} from channel {channel_id}")
@@ -76,8 +79,7 @@ class SlackRevoker:
             logger.error(f"Failed to kick {user_id} from {channel_id}: {error}")
             return False, error
 
-    def deactivate_user(self, team_id: str, user_id: str,
-                        dry_run: bool = False) -> tuple[bool, str]:
+    def deactivate_user(self, team_id: str, user_id: str, dry_run: bool = False) -> tuple[bool, str]:
         """
         Deactivate a user from the workspace.
         Requires admin.users.remove scope (Enterprise Grid only).
@@ -86,10 +88,13 @@ class SlackRevoker:
             logger.info(f"[DRY RUN] Would deactivate user {user_id} from workspace {team_id}")
             return True, "dry_run"
 
-        result = self._api("admin.users.remove", {
-            "team_id": team_id,
-            "user_id": user_id,
-        })
+        result = self._api(
+            "admin.users.remove",
+            {
+                "team_id": team_id,
+                "user_id": user_id,
+            },
+        )
 
         if result.get("ok"):
             logger.info(f"Deactivated user {user_id} from workspace {team_id}")

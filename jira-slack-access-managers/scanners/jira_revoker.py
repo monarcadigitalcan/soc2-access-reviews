@@ -11,10 +11,10 @@ Handles three resource_type values:
 """
 
 import logging
-import requests
-from datetime import datetime, timezone
 
-from .config import get_secret, SECRET_JIRA_TOKEN, SECRET_JIRA_EMAIL, JIRA_SITE_URL
+import requests
+
+from .config import JIRA_SITE_URL, SECRET_JIRA_EMAIL, SECRET_JIRA_TOKEN, get_secret
 
 logger = logging.getLogger(__name__)
 
@@ -46,14 +46,15 @@ class JiraRevoker:
                 return None
             roles = resp.json()
             self._role_cache[project_key] = {
-                name: role_url.rstrip("/").split("/")[-1]
-                for name, role_url in roles.items()
+                name: role_url.rstrip("/").split("/")[-1] for name, role_url in roles.items()
             }
 
         role_id = self._role_cache[project_key].get(role_name)
         if not role_id:
-            logger.warning(f"Role '{role_name}' not found in project {project_key}. "
-                           f"Available: {list(self._role_cache[project_key].keys())}")
+            logger.warning(
+                f"Role '{role_name}' not found in project {project_key}. "
+                f"Available: {list(self._role_cache[project_key].keys())}"
+            )
         return role_id
 
     def revoke_group_membership(self, group_id: str, account_id: str, dry_run: bool = False) -> tuple[bool, str]:
@@ -74,8 +75,9 @@ class JiraRevoker:
             logger.error(f"Failed to remove user {account_id} from group {group_id}: {msg}")
             return False, msg
 
-    def revoke_project_role_user(self, project_key: str, role_name: str,
-                                 account_id: str, dry_run: bool = False) -> tuple[bool, str]:
+    def revoke_project_role_user(
+        self, project_key: str, role_name: str, account_id: str, dry_run: bool = False
+    ) -> tuple[bool, str]:
         """Remove a user from a project role."""
         role_id = self._get_role_id(project_key, role_name)
         if not role_id:
@@ -97,8 +99,9 @@ class JiraRevoker:
             logger.error(f"Failed to remove user {account_id} from {project_key} role {role_name}: {msg}")
             return False, msg
 
-    def revoke_project_role_group(self, project_key: str, role_name: str,
-                                  group_name: str, dry_run: bool = False) -> tuple[bool, str]:
+    def revoke_project_role_group(
+        self, project_key: str, role_name: str, group_name: str, dry_run: bool = False
+    ) -> tuple[bool, str]:
         """Remove a group from a project role."""
         role_id = self._get_role_id(project_key, role_name)
         if not role_id:
@@ -108,7 +111,9 @@ class JiraRevoker:
         params = {"group": group_name}
 
         if dry_run:
-            logger.info(f"[DRY RUN] Would remove group '{group_name}' from {project_key} role {role_name} (id={role_id})")
+            logger.info(
+                f"[DRY RUN] Would remove group '{group_name}' from {project_key} role {role_name} (id={role_id})"
+            )
             return True, "dry_run"
 
         resp = self.session.delete(url, params=params)

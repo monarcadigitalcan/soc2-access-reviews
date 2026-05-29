@@ -1,5 +1,9 @@
 # SOC 2 Access Reviews
 
+[![CI](../../actions/workflows/ci.yml/badge.svg)](../../actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](./LICENSE)
+[![Python 3.9+](https://img.shields.io/badge/python-3.9%2B-blue.svg)](https://www.python.org/)
+
 **A practical, runnable toolkit for the access-review evidence that SOC 2 (and most security frameworks) demand — across Google Workspace, Atlassian Jira, and Slack.**
 
 If you are responsible for SOC 2 compliance at an organization that runs on **Google Workspace, Jira Cloud, and Slack**, this is for you. Auditors expect you to prove, every quarter, that you know who has access to what, that you remove access that shouldn't be there, and that you have the evidence to show for it. Doing that by hand across three platforms is slow, error-prone, and hard to document. These tools turn it into a repeatable, evidence-producing workflow.
@@ -17,6 +21,38 @@ A repeatable **audit → review → remediate → prove** loop for each platform
 5. **Produce the evidence.** Every scan and every revocation is written to timestamped CSVs and a narrative report you can hand directly to your auditor as the proof that the review happened.
 
 The result is a defensible evidence trail — before/after snapshots plus per-action logs — for each quarterly access review.
+
+---
+
+## How it works
+
+```mermaid
+flowchart LR
+    subgraph SRC[Platforms]
+        J[Jira Cloud]
+        S[Slack]
+        G[Google Drive]
+    end
+
+    J --> SCAN
+    S --> SCAN
+    G --> AUDIT
+
+    SCAN[1 . Scan / enumerate access] --> RCSV[(Review CSV)]
+    AUDIT[1 . Audit Drive permissions] --> ACSV[(Audit CSV)]
+
+    RCSV --> FLAG
+    ACSV --> FLAG
+    FLAG[2 . Auto-flag external / stale / departed] --> REVIEW{3 . Human review<br/>KEEP or OFFBOARD}
+
+    REVIEW -->|approved offboards| REVOKE[4 . Revoke via API<br/>dry-run first]
+    REVIEW -->|accepted risk / manual| HANDOFF[(Hand-off lists)]
+
+    REVOKE --> EVID[(5 . Evidence CSVs<br/>+ narrative report)]
+    EVID --> AUD([SOC 2 auditor])
+```
+
+Each platform follows the same **audit → review → remediate → prove** loop; the two subprojects implement it for their respective APIs.
 
 ---
 
@@ -66,6 +102,13 @@ python -m venv venv && source venv/bin/activate
 pip install -r requirements.txt
 ```
 
+For development (lint, format, byte-compile), use the Makefile from the repo root:
+
+```bash
+make install-dev    # installs ruff
+make check          # lint + format check + compile (what CI runs)
+```
+
 Both subprojects ship **synthetic sample data** (clearly fake `*_sample.csv` files and example reports) so you can see the input/output shapes before pointing the tools at real credentials.
 
 ---
@@ -76,6 +119,10 @@ Both subprojects ship **synthetic sample data** (clearly fake `*_sample.csv` fil
 soc2-access-reviews/
 ├── README.md                     ← you are here
 ├── LICENSE                       ← MIT
+├── Makefile                      ← make lint / format / compile / check
+├── requirements-dev.txt          ← dev tooling (ruff)
+├── ruff.toml                     ← lint + format config
+├── .github/workflows/ci.yml      ← lint, format check, byte-compile
 ├── jira-slack-access-managers/   ← Jira + Slack scan/revoke CLI
 └── shared-drive-file-review/     ← Google Drive permission audit + remediation
 ```

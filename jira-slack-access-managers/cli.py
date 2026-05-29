@@ -52,6 +52,7 @@ def run_jira_scan(output_dir: str, upload: bool = False) -> str:
 
     if upload:
         from scanners.config import upload_csv_to_gcs
+
         gcs_uri = upload_csv_to_gcs(filepath, "jira")
         logger.info(f"Uploaded to {gcs_uri}")
 
@@ -73,6 +74,7 @@ def run_slack_scan(output_dir: str, upload: bool = False) -> str:
 
     if upload:
         from scanners.config import upload_csv_to_gcs
+
         gcs_uri = upload_csv_to_gcs(filepath, "slack")
         logger.info(f"Uploaded to {gcs_uri}")
 
@@ -186,10 +188,8 @@ def main():
     # --- revoke subcommand ---
     revoke_parser = sub.add_parser("revoke", help="Revoke access from reviewed CSVs")
     revoke_parser.add_argument("csv", help="Path to reviewed CSV with revoke_status column")
-    revoke_parser.add_argument("--platform", required=True, choices=["jira", "slack"],
-                               help="Platform to revoke from")
-    revoke_parser.add_argument("--dry-run", action="store_true",
-                               help="Preview revocations without making changes")
+    revoke_parser.add_argument("--platform", required=True, choices=["jira", "slack"], help="Platform to revoke from")
+    revoke_parser.add_argument("--dry-run", action="store_true", help="Preview revocations without making changes")
     revoke_parser.add_argument(
         "--output-dir",
         default="./output",

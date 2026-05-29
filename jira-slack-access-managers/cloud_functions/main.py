@@ -28,17 +28,18 @@ Response (JSON):
     }
 """
 
-import os
 import json
-import tempfile
 import logging
+import os
+import sys
+import tempfile
+
 import functions_framework
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("access-review-cf")
 
-# Add parent dir to path so scanners module is importable
-import sys
+# Add parent dir to path so the scanners module is importable
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 
 
@@ -71,9 +72,11 @@ def _run_scan(platform: str, tmpdir: str, upload: bool) -> dict:
     try:
         if platform == "jira":
             from scanners.jira_scanner import JiraScanner
+
             scanner = JiraScanner()
         elif platform == "slack":
             from scanners.slack_scanner import SlackScanner
+
             scanner = SlackScanner()
         else:
             return {"status": "error", "message": f"Unknown platform: {platform}"}
@@ -85,6 +88,7 @@ def _run_scan(platform: str, tmpdir: str, upload: bool) -> dict:
         gcs_uri = ""
         if upload:
             from scanners.config import upload_csv_to_gcs
+
             gcs_uri = upload_csv_to_gcs(filepath, platform)
 
         return {

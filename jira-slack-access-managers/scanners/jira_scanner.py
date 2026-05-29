@@ -10,10 +10,11 @@ Produces a pandas DataFrame conforming to csv_schema.COLUMNS.
 """
 
 import logging
-import requests
+
 import pandas as pd
-from typing import Optional
-from .config import get_secret, SECRET_JIRA_TOKEN, SECRET_JIRA_EMAIL, JIRA_SITE_URL
+import requests
+
+from .config import JIRA_SITE_URL, SECRET_JIRA_EMAIL, SECRET_JIRA_TOKEN, get_secret
 from .csv_schema import normalize_dataframe
 
 logger = logging.getLogger(__name__)
@@ -126,34 +127,38 @@ class JiraScanner:
                     actor_type = actor.get("type", "")
                     if actor_type == "atlassian-user-role-actor":
                         user = actor.get("actorUser", {})
-                        rows.append({
-                            "platform": "jira",
-                            "resource_type": "project",
-                            "resource_name": f"{pkey} - {pname}",
-                            "resource_id": pkey,
-                            "user_email": user.get("emailAddress", ""),
-                            "user_display_name": actor.get("displayName", ""),
-                            "user_id": user.get("accountId", ""),
-                            "role": role_name,
-                            "role_id": role_id,
-                            "last_active": "",  # not available per-project
-                            "granted_date": "",
-                        })
+                        rows.append(
+                            {
+                                "platform": "jira",
+                                "resource_type": "project",
+                                "resource_name": f"{pkey} - {pname}",
+                                "resource_id": pkey,
+                                "user_email": user.get("emailAddress", ""),
+                                "user_display_name": actor.get("displayName", ""),
+                                "user_id": user.get("accountId", ""),
+                                "role": role_name,
+                                "role_id": role_id,
+                                "last_active": "",  # not available per-project
+                                "granted_date": "",
+                            }
+                        )
                     elif actor_type == "atlassian-group-role-actor":
                         # Group assigned to role — we note the group, members enumerated separately
-                        rows.append({
-                            "platform": "jira",
-                            "resource_type": "project_group_role",
-                            "resource_name": f"{pkey} - {pname}",
-                            "resource_id": pkey,
-                            "user_email": "",
-                            "user_display_name": f"[Group] {actor.get('displayName', '')}",
-                            "user_id": actor.get("name", ""),
-                            "role": role_name,
-                            "role_id": role_id,
-                            "last_active": "",
-                            "granted_date": "",
-                        })
+                        rows.append(
+                            {
+                                "platform": "jira",
+                                "resource_type": "project_group_role",
+                                "resource_name": f"{pkey} - {pname}",
+                                "resource_id": pkey,
+                                "user_email": "",
+                                "user_display_name": f"[Group] {actor.get('displayName', '')}",
+                                "user_id": actor.get("name", ""),
+                                "role": role_name,
+                                "role_id": role_id,
+                                "last_active": "",
+                                "granted_date": "",
+                            }
+                        )
 
         logger.info(f"Project role scan complete: {len(rows)} entries")
         return rows
@@ -175,18 +180,20 @@ class JiraScanner:
                 continue
 
             for member in members:
-                rows.append({
-                    "platform": "jira",
-                    "resource_type": "group",
-                    "resource_name": gname,
-                    "resource_id": gid,
-                    "user_email": member.get("emailAddress", ""),
-                    "user_display_name": member.get("displayName", ""),
-                    "user_id": member.get("accountId", ""),
-                    "role": "member",
-                    "last_active": member.get("lastActive", ""),
-                    "granted_date": "",
-                })
+                rows.append(
+                    {
+                        "platform": "jira",
+                        "resource_type": "group",
+                        "resource_name": gname,
+                        "resource_id": gid,
+                        "user_email": member.get("emailAddress", ""),
+                        "user_display_name": member.get("displayName", ""),
+                        "user_id": member.get("accountId", ""),
+                        "role": "member",
+                        "last_active": member.get("lastActive", ""),
+                        "granted_date": "",
+                    }
+                )
 
         logger.info(f"Group scan complete: {len(rows)} entries")
         return rows
@@ -209,6 +216,7 @@ class JiraScanner:
 
         # Mark departed employees (Phase 2)
         from .config import get_departed_employees
+
         departed = get_departed_employees()
         if departed:
             df.loc[df["user_email"].isin(departed), "departed"] = True

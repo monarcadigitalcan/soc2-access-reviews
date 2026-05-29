@@ -50,7 +50,6 @@ DEFAULTS = {
 
 def normalize_dataframe(df):
     """Ensure a DataFrame has all required columns with defaults."""
-    import pandas as pd
 
     for col in COLUMNS:
         if col not in df.columns:

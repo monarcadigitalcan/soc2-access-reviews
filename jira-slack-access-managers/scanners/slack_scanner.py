@@ -15,9 +15,10 @@ Required Slack Bot Token scopes:
 
 import logging
 import time
+
 import pandas as pd
-from typing import Optional
-from .config import get_secret, SECRET_SLACK_TOKEN
+
+from .config import SECRET_SLACK_TOKEN, get_secret
 from .csv_schema import normalize_dataframe
 
 logger = logging.getLogger(__name__)
@@ -77,10 +78,7 @@ class SlackScanner:
         logger.info("Fetching all Slack users...")
         users = self._api_paginated("users.list", "members")
         # Filter out bots and Slackbot
-        real_users = [
-            u for u in users
-            if not u.get("is_bot") and u.get("id") != "USLACKBOT"
-        ]
+        real_users = [u for u in users if not u.get("is_bot") and u.get("id") != "USLACKBOT"]
         logger.info(f"Found {len(real_users)} real users ({len(users)} total including bots)")
         return real_users
 
@@ -127,18 +125,20 @@ class SlackScanner:
 
             status = "deactivated" if user.get("deleted") else "active"
 
-            rows.append({
-                "platform": "slack",
-                "resource_type": "workspace",
-                "resource_name": "workspace",
-                "resource_id": user.get("team_id", ""),
-                "user_email": profile.get("email", ""),
-                "user_display_name": profile.get("real_name", user.get("name", "")),
-                "user_id": user.get("id", ""),
-                "role": f"{role} ({status})",
-                "last_active": "",  # requires admin.users.list (Enterprise Grid)
-                "granted_date": "",
-            })
+            rows.append(
+                {
+                    "platform": "slack",
+                    "resource_type": "workspace",
+                    "resource_name": "workspace",
+                    "resource_id": user.get("team_id", ""),
+                    "user_email": profile.get("email", ""),
+                    "user_display_name": profile.get("real_name", user.get("name", "")),
+                    "user_id": user.get("id", ""),
+                    "role": f"{role} ({status})",
+                    "last_active": "",  # requires admin.users.list (Enterprise Grid)
+                    "granted_date": "",
+                }
+            )
 
         logger.info(f"Workspace user scan complete: {len(rows)} entries")
         return rows
@@ -169,18 +169,20 @@ class SlackScanner:
                     continue
                 user = user_lookup[uid]
                 profile = user.get("profile", {})
-                rows.append({
-                    "platform": "slack",
-                    "resource_type": ch_type,
-                    "resource_name": f"#{ch_name}",
-                    "resource_id": ch_id,
-                    "user_email": profile.get("email", ""),
-                    "user_display_name": profile.get("real_name", user.get("name", uid)),
-                    "user_id": uid,
-                    "role": "member",
-                    "last_active": "",
-                    "granted_date": "",
-                })
+                rows.append(
+                    {
+                        "platform": "slack",
+                        "resource_type": ch_type,
+                        "resource_name": f"#{ch_name}",
+                        "resource_id": ch_id,
+                        "user_email": profile.get("email", ""),
+                        "user_display_name": profile.get("real_name", user.get("name", uid)),
+                        "user_id": uid,
+                        "role": "member",
+                        "last_active": "",
+                        "granted_date": "",
+                    }
+                )
 
             time.sleep(RATE_LIMIT_DELAY)  # be polite to Slack
 
@@ -205,6 +207,7 @@ class SlackScanner:
 
         # Mark departed employees (Phase 2)
         from .config import get_departed_employees
+
         departed = get_departed_employees()
         if departed:
             df.loc[df["user_email"].isin(departed), "departed"] = True
