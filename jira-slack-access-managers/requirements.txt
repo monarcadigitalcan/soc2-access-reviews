@@ -1,0 +1,9 @@
+requests>=2.31.0
+pandas>=2.0.0
+google-cloud-secret-manager>=2.16.0
+google-cloud-storage>=2.10.0
+# Phase 2: Cloud Functions
+functions-framework>=3.0.0
+# Phase 2: Offboarding DB (uncomment when ready)
+# sqlalchemy>=2.0.0
+# pg8000>=1.30.0

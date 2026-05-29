@@ -1,0 +1,5 @@
+platform,resource_type,resource_name,resource_id,user_email,user_display_name,user_id,role,role_id,last_active,granted_date,departed,flagged,reviewer_notes,revoke_status,revoke_date
+slack,workspace,workspace,T0SAMPLE001,jordan.lee@acme.example.com,Jordan Lee,U0SAMPLE01,owner (active),,,,False,False,,KEEP,
+slack,workspace,workspace,T0SAMPLE001,sam.rivera@acme.example.com,Sam Rivera,U0SAMPLE02,member (deactivated),,,,True,True,Departed 2026-02-28,OFFBOARD,
+slack,channel,#globex-project,C0SAMPLE10,alex.kim@acme.example.com,Alex Kim,U0SAMPLE03,member,,,,False,False,,KEEP,
+slack,channel,#vendor-shared,C0SAMPLE11,contractor@contoso.example.com,Contoso Contractor,U0SAMPLE04,member,,,,False,True,Slack Connect external guest,KEEP,

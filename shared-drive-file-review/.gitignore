@@ -1,0 +1,30 @@
+# Credentials — never commit
+service_account.json
+*.json.key
+*-credentials.json
+.env
+
+# Audit data — real emails, file IDs, customer paths. Keep out,
+# but allow checked-in synthetic samples (*_sample.csv, report_input_sample.md).
+input/*
+output/*
+!input/.gitkeep
+!output/.gitkeep
+!input/emails_revoke.txt
+!input/*_sample.csv
+!output/*_sample.csv
+!output/report_input_sample.md
+
+# OS / editor
+.DS_Store
+.idea/
+.vscode/
+*.swp
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+venv/
+env/

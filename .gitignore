@@ -1,0 +1,23 @@
+# Defense-in-depth root ignores (each subproject also has its own .gitignore)
+
+# Secrets — never commit
+.env
+*.env.local
+service_account.json
+*.json.key
+*-credentials.json
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+venv/
+.venv/
+env/
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp

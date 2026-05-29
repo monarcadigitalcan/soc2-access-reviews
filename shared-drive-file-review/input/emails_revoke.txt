@@ -1,0 +1,3 @@
+sam.rivera@acme.example.com
+taylor.chen@acme.example.com
+former.contractor@contoso.example.com

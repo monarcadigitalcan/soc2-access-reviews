@@ -1,0 +1,4 @@
+Timestamp,File Name,File ID,Email/Domain,Permission Type,Role,Action,Reason
+2026-04-10 11:17:04,Vendor Integration Spec,1AbCdEfSample002,partner@vendor.example.net,user,reader,REVOKED,
+2026-04-10 11:17:06,Globex SOW,1AbCdEfSample003,contractor@contoso.example.com,user,commenter,REVOKED,
+2026-04-10 11:17:08,Brand Assets,1AbCdEfSample004,partner-agency.example.org,domain,reader,SKIPPED,Inherited permission — handled at parent folder

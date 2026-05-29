@@ -1,0 +1,5 @@
+Flagged External,Shared Drive Name,File Name,Modified Date,Folder Path,Permission Type,Role,Email/Domain,File ID,Link
+False,Engineering,Architecture Diagram,2026-03-01,/Engineering/Docs,user,writer,jordan.lee@acme.example.com,1AbCdEfSample001,https://drive.google.com/file/d/1AbCdEfSample001
+True,Engineering,Vendor Integration Spec,2025-08-14,/Engineering/Vendors,user,reader,partner@vendor.example.net,1AbCdEfSample002,https://drive.google.com/file/d/1AbCdEfSample002
+True,Customers - Globex,Globex SOW,2025-06-02,/Customers - Globex,user,commenter,contractor@contoso.example.com,1AbCdEfSample003,https://drive.google.com/file/d/1AbCdEfSample003
+True,Marketing,Brand Assets,2024-12-20,/Marketing/Brand,domain,reader,partner-agency.example.org,1AbCdEfSample004,https://drive.google.com/file/d/1AbCdEfSample004

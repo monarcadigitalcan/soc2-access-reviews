@@ -1,0 +1,32 @@
+# Secrets — never commit
+.env
+*.env.local
+service_account.json
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+dist/
+build/
+venv/
+.venv/
+
+# Generated output (may contain real evidence data)
+output/*
+!output/.gitkeep
+
+# Real input data — keep out, but allow checked-in synthetic samples
+input/*
+!input/.gitkeep
+!input/emails_revoke.txt
+!input/report_input_sample.md
+!input/*_sample.csv
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db

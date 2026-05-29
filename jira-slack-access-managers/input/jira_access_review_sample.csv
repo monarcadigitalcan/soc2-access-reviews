@@ -1,0 +1,6 @@
+platform,resource_type,resource_name,resource_id,user_email,user_display_name,user_id,role,role_id,last_active,granted_date,departed,flagged,reviewer_notes,revoke_status,revoke_date
+jira,project,Globex Migration,GLOBEX,jordan.lee@acme.example.com,Jordan Lee,5f1a0001,Administrators,10002,2026-04-20,2024-01-05,False,False,,KEEP,
+jira,project,Globex Migration,GLOBEX,sam.rivera@acme.example.com,Sam Rivera,5f1a0002,Developers,10001,2025-11-30,2024-03-01,True,True,Left company 2026-02-28 (confirmed in HRIS),OFFBOARD,
+jira,group,jira-software-users,grp-001,alex.kim@acme.example.com,Alex Kim,5f1a0003,member,,2026-04-22,2023-06-15,False,False,,KEEP,
+jira,project,Initech Analytics,INITECH,partner@vendor.example.net,Initech Partner,5f1a0004,Viewers,10004,2025-09-01,2025-02-10,False,True,External partner — engagement ended Q1,OFFBOARD,
+jira,project,Initech Analytics,INITECH,,Automation for Jira,app-557058,atlassian-addons-project-access,10003,,,False,False,"Marketplace app, not a person",KEEP,
