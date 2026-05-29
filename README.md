@@ -133,6 +133,10 @@ soc2-access-reviews/
 - Provide your own secrets via `.env` (local dev) or GCP Secret Manager, and your own `service_account.json` for the Drive tool. Both are gitignored — keep it that way.
 - Rotate any token or key the moment it might have been exposed.
 
+## About this project
+
+I built and operated this tooling to run real quarterly SOC 2 access reviews across Google Workspace, Jira, and Slack — turning a manual, multi-platform compliance chore into a repeatable, evidence-producing workflow. This is a generalized, fully sanitized version published as a portfolio piece: all organization-specific names, credentials, and data have been removed and replaced with synthetic examples. It's shared in the hope it's a useful starting point for anyone facing the same audit each quarter.
+
 ## License
 
 [MIT](./LICENSE) — provided as-is, with no warranty. You are responsible for how you use it against your own systems.

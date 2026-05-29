@@ -13,9 +13,12 @@ jobs:
       - uses: actions/checkout@v4
       - name: Ruff lint
         uses: astral-sh/ruff-action@v3
+        with:
+          version: 0.15.15  # keep in sync with requirements-dev.txt
       - name: Ruff format check
         uses: astral-sh/ruff-action@v3
         with:
+          version: 0.15.15  # keep in sync with requirements-dev.txt
           args: format --check
 
   compile:
